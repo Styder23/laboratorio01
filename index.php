@@ -4,21 +4,19 @@ session_start();
 error_reporting(0);
 
 // Obtén la sesión actual
-$VARSESION = $_SESSION['username'];
-$NomUsu = $_SESSION['Usuario'];
-$hospita = $_SESSION['Establecimiento'];
+$NomUsu = $_SESSION['Persona'];
+$hospita = $_SESSION['nombre'];
 
 // Verifica si la sesión está vacía o no está establecida
-if ($VARSESION == null || $VARSESION == '') {
+if (!isset($_SESSION['idusuarios'])) {
     // Redirige al usuario a la página de inicio de sesión
     header("Location: ./login/login.php");
-    
-    exit(); // Finaliza la ejecución del script
+//    exit(); // Finaliza la ejecución del script
 }
 // NO dejar poner atras y entrar
-if(!isset($_SESSION['idusuarios'])){
-    header("Location: ./login/login.php");
-}
+//if(!isset($_SESSION['idusuarios'])){
+ //   header("Location: ./login/login.php");
+//}
 ?>
 
 <!doctype html>
@@ -74,17 +72,17 @@ if(!isset($_SESSION['idusuarios'])){
                         <i class="material-icons">add</i><span>Nuevo registro</span></a>
                     <ul class="collapse list-unstyled menu" id="homeSubmenu1">
                         <li>
-                            <a href="#" onclick="cargarIframe('../tablas/reg_paciente.php')">registro Pacientes</a>
+                            <a href="#" onclick="cargarIframe('./tablas/paciente/paciente.php')">registro Pacientes</a>
 
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('../mostrar/index.php')">Registro Examenes</a>
+                            <a href="#" onclick="cargarIframe('./tablas/examen/examen.php')">Registro Examenes</a>
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('../tablas/reg_examen.php')">Registro Areas</a>
+                            <a href="#" onclick="cargarIframe('./tablas/muestras/index.php')">Registro muestras</a>
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('../tablas/reg_usu.php')">Registro Usuarios</a>
+                            <a href="#" onclick="cargarIframe('./tablas/usuario/usuario.php')">Registro Usuarios</a>
                         </li>
                     </ul>
                 </li>
@@ -138,7 +136,7 @@ if(!isset($_SESSION['idusuarios'])){
                 </li>
 
                 <li class="dropdown">
-                    <a href="../login/cerrar.php">
+                    <a href="./login/cerrar.php">
                         <i class="material-icons">logout</i><span>Salir</span></a>
                 </li>
         </nav>

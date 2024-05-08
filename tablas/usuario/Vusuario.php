@@ -1,11 +1,10 @@
 <?php
-require '../conexion/config.php';
-
+require '../../conexion/config.php';
 // Especifica las columnas que quieres seleccionar de la base de datos
-$columnas = ["id", "DNI", "PACIENTE", "EDAD", "GENERO", "CORREO", "ruc", "estado"];
+$columnas = ["idusuarios", "dni", "PERSONA", "GENERO", "EDAD", "TELEFONO", "DIRECCION", "CORREO", "EESS", "RED", "CARGO", "USUARIO"];
 
 // Especifica la tabla que quieres consultar
-$tabla = "v_pacientes";
+$tabla = "v_usuario";
 
 // Obtiene el valor del campo 'campo' enviado por el cliente (si existe)
 $campo = isset($_POST["campo"]) ? $conectar->real_escape_string($_POST["campo"]) : null;

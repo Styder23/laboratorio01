@@ -1,7 +1,7 @@
 <?php 
     include("connection.php");
 
-    $sql="select * from v_muestras";
+    $sql="SELECT * from v_muestras";
     $query=mysqli_query($con,$sql);
     $count_all_rows=mysqli_num_rows($query);
 

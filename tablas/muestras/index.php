@@ -66,7 +66,7 @@ $query1=$con->query("SELECT idgenero,nom_gen  FROM genero");
             "paging": true,
             "order": [],
             "ajax": {
-                "url": "fetch_data.php",
+                "url": "./fetch_data.php",
                 "type": "post",
             },
             "fnCreateRow": function(nRow, aData, iDataIndex) {

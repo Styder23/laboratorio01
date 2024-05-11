@@ -1,5 +1,4 @@
 <?php
-
 // Importa la clase de conexión
 require_once("../../conexion/conexion.php");
 
@@ -21,11 +20,8 @@ try {
         // Ejecutar el procedimiento almacenado
         $stmt->execute();
 
-        // Recoger el resultado del procedimiento almacenado
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
         // Devolver la respuesta en formato JSON
-        echo json_encode($resultado);
+        echo json_encode(['status' => 'true']);
 
         // Cerrar el cursor
         $stmt->closeCursor();
@@ -37,5 +33,4 @@ try {
     // Manejar excepciones y devolver el error en formato JSON
     echo json_encode(['error' => 'Hubo un error al procesar la solicitud: ' . $e->getMessage()]);
 }
-
 ?>

@@ -1,44 +1,40 @@
 <?php
+// Incluye la conexión a la base de datos
+include('../examen/conexion.php');
 
-// Importa la clase de conexión
-require_once("../../conexion/conexion.php");
-
-try {
-    // Crea una instancia de la base de datos
-    $conexionBD = BD::crearInstancia();
-
-    // Verifica si el ID del paciente está presente en la solicitud
-    if (isset($_GET['id'])) {
-        $idPaciente = intval($_GET['id']);
-
-        // Realiza una consulta para obtener los datos del paciente con el ID proporcionado
-        $query = $conexionBD->prepare("SELECT pa.idpacientes AS id, p.dni AS DNI, p.nombres AS NOMBRE, 
-                                       p.apellidos AS APELLIDO, p.edad AS EDAD, p.direccion AS DIRECCIÓN, 
-                                       p.correo AS CORREO, pa.ruc AS RUC,
-                                       p.fk_idgenero AS GENERO_ID
-                                       FROM pacientes pa
-                                       JOIN personas p ON pa.fk_idpersona = p.idpersonas
-                                       WHERE pa.idpacientes = ?");
-        $query->execute([$idPaciente]);
-
-        // Verifica si se encontró el paciente
-        if ($query->rowCount() > 0) {
-            // Obtén los datos del paciente como un objeto asociativo
-            $datosPaciente = $query->fetch(PDO::FETCH_ASSOC);
-
-            // Devuelve los datos del paciente en formato JSON
-            echo json_encode(['paciente' => $datosPaciente]);
-        } else {
-            // Si no se encontró el paciente, devuelve un mensaje de error
-            echo json_encode(['error' => 'Paciente no encontrado.']);
-        }
-    } else {
-        // Si no se proporciona un ID, devuelve un mensaje de error
-        echo json_encode(['error' => 'ID del paciente no proporcionado.']);
-    }
-} catch (Exception $e) {
-    // Manejo de excepciones
-    echo json_encode(['error' => 'Hubo un error al procesar la solicitud: ' . $e->getMessage()]);
+// Verifica si se recibió un ID
+if (!isset($_POST['id']) || empty($_POST['id'])) {
+    echo json_encode(['error' => 'ID no proporcionado']);
+    exit;
 }
 
+// Obtiene el ID del POST
+$id = intval($_POST['id']);
+
+// Consulta para obtener el examen
+$sql = "SELECT pa.idpacientes AS id,p.dni AS DNI, p.nombres as NOMBRE, p.apellidos AS APELLIDO,p.edad AS EDAD,p.direccion AS DIRECCIÓN,
+g.idgenero AS GENERO,p.correo AS CORREO,pa.ruc AS ruc
+FROM pacientes pa
+JOIN personas p ON pa.fk_idpersona = p.idpersonas
+JOIN genero g ON p.fk_idgenero = g.idgenero
+WHERE idpacientes = ? LIMIT 1";
+$stmt = $con->prepare($sql);
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Si no se encuentra ningún examen
+if ($result->num_rows === 0) {
+    echo json_encode(['error' => 'No se encontró el paciente']);
+    exit;
+}
+
+// Obtiene el resultado como un array asociativo
+$row = $result->fetch_assoc();
+
+// Devuelve el resultado como JSON
+echo json_encode($row);
+
+// Cierra la conexión
+$stmt->close();
 ?>

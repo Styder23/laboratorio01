@@ -2,7 +2,7 @@
 require '../../conexion/config.php';
 
 // Especifica las columnas que quieres seleccionar de la base de datos
-$columnas = ["id", "DNI", "PACIENTE", "EDAD", "DIRECCIÓN" ,"GENERO", "CORREO", "ruc", "estado"];
+$columnas = ["id", "DNI", "PACIENTE", "EDAD", "DIRECCIÓN" ,"GENERO", "CORREO", "ruc"];
 
 // Especifica la tabla que quieres consultar
 $tabla = "v_pacientes";

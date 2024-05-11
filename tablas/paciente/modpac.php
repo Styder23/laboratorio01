@@ -15,7 +15,7 @@ try {
         // Verifica que se han enviado los campos del formulario necesarios
         if (isset($_POST['dni']) && isset($_POST['nombres']) && isset($_POST['apellidos']) &&
             isset($_POST['edad']) && isset($_POST['direccion']) && isset($_POST['genero']) &&
-            isset($_POST['correo']) && isset($_POST['ruc']) && isset($_POST['estado'])) {
+            isset($_POST['correo']) && isset($_POST['ruc'])) {
             
             // Extraer los datos del formulario
             $dni = $_POST['dni'];
@@ -26,10 +26,9 @@ try {
             $genero = intval($_POST['genero']);
             $correo = $_POST['correo'];
             $ruc = $_POST['ruc'];
-            $estado = intval($_POST['estado']);
 
             // Prepara y ejecuta la llamada al procedimiento almacenado
-            $stmt = $conexionBD->prepare("CALL pro_Uppaciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conexionBD->prepare("CALL pro_Uppaciente(?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->bindParam(1, $idPaciente, PDO::PARAM_INT);
             $stmt->bindParam(2, $dni, PDO::PARAM_STR);
             $stmt->bindParam(3, $nombres, PDO::PARAM_STR);
@@ -39,7 +38,6 @@ try {
             $stmt->bindParam(7, $genero, PDO::PARAM_INT);
             $stmt->bindParam(8, $correo, PDO::PARAM_STR);
             $stmt->bindParam(9, $ruc, PDO::PARAM_STR);
-            $stmt->bindParam(10, $estado, PDO::PARAM_INT);
 
             // Ejecutar el procedimiento almacenado
             $stmt->execute();

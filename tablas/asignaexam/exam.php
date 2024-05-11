@@ -31,7 +31,7 @@ if (!$query) {
     <style>
         .green {
             background-color: green;
-            color: #fff;
+            color: #fff   ;
         }
     
     </style>

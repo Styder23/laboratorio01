@@ -24,7 +24,8 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Pacientes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
@@ -66,7 +67,6 @@ try {
                     <th>GENERO</th>
                     <th>CORREO</th>
                     <th>RUC</th>
-                    <th>ESTADO</th>
                     <th>EDITAR</th>
                     <th>ELIMINAR</th>
                 </tr>
@@ -90,7 +90,7 @@ try {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="registroModalLabel">Nuevo Registro</h5>
-                    
+
                 </div>
                 <div class="modal-body">
                     <!-- Formulario dentro del modal -->
@@ -142,10 +142,6 @@ try {
                                 <label for="ruc">RUC (Opcional)</label>
                                 <input type="text" class="form-control" id="ruc" name="ruc" required>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="estado">Estado</label>
-                                <input type="text" class="form-control" id="estado" name="estado" required>
-                            </div>
                         </div><br>
 
                         <div class="form-row">
@@ -160,9 +156,85 @@ try {
         </div>
     </div>
 
+
+    <!-- Modal editar-->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registroModalLabel">Editar Registro</h5>
+
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario dentro del modal -->
+                    <form id="editForm" action="modpc.php" method="POST">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDNI">DNI</label>
+                                <input type="text" class="form-control" id="_dni" name="_dni" onkeyup="buscar()"
+                                    required>
+                                <input type="hidden" name="id" id="id">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputNombres">Nombres:</label>
+                                <input type="text" class="form-control" id="_nombres" name="_nombres" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputNombres">Apellidos:</label>
+                                <input type="text" class="form-control" id="_apellidos" name="_apellidos" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="edad">Edad</label>
+                                <input type="number" class="form-control" id="_edad" name="_edad" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="direccion">direccion</label>
+                                <input type="text" class="form-control" id="_direccion" name="_direccion" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="genero">Género</label>
+                                <select class="form-control" id="_genero" name="_genero" required>
+                                    <option value="">Seleccionar Género</option>
+                                    <?php
+                                    // Recorre los resultados de la consulta y rellena las opciones del combo de género
+                                    foreach ($generos as $genero) {
+                                        echo '<option value="' . $genero['idgenero'] . '">' . $genero['nom_gen'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Reorganización de los combos -->
+                        <div class="row">
+
+
+                            <div class="form-group col-md-6">
+                                <label for="correo">Correo (OPCIONAL)</label>
+                                <input type="email" class="form-control" id="_correo" name="_correo" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="ruc">RUC (Opcional)</label>
+                                <input type="text" class="form-control" id="_ruc" name="_ruc" required>
+                            </div>
+                        </div><br>
+
+                        <div class="form-row">
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary" name="edit">Modificar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Bootstrap JS and jQuery -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="./captura.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+    <script src="captura.js"></script>
+
     <!-- Script para manejar la búsqueda -->
     <script>
     // Inicializa la búsqueda y escucha los eventos
@@ -204,12 +276,11 @@ try {
                         html += '<td>' + row.GENERO + '</td>';
                         html += '<td>' + row.CORREO + '</td>';
                         html += '<td>' + row.ruc + '</td>';
-                        html += '<td>' + row.estado + '</td>';
 
                         // Genera una celda con un enlace para editar, incluyendo el ID del paciente
                         html += '<td class="text-center">';
                         html +=
-                            '<a href="#" data-bs-toggle="modal" data-bs-target="#registroModal" data-id="' +
+                            '<a href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-id="' +
                             row.id +
                             '" class="btn-modifica">';
                         html += '<img src="../../imagenes/boligrafo.png" alt="Editar"></a>';
@@ -264,21 +335,41 @@ try {
     // Escucha eventos en los campos de entrada
     campo.addEventListener("input", () => getData(paginaActual));
     n_registro.addEventListener("change", () => getData(paginaActual));
-
-    // Agregar evento de clic para editar paciente
-    /*document.addEventListener('click', function(event) {
-        const target = event.target;
-        // Verifica si el elemento que se hizo clic es el icono de editar
-        if (target.tagName === 'IMG' && target.parentElement.getAttribute('data-bs-target') ===
-            '#registroModal') {
-            // Captura el ID del paciente desde el atributo data-id
-            const idPaciente = target.parentElement.getAttribute('data-id');
-            // Realiza la acción de cargar datos del paciente en el modal
-            
-        }
-    });*/
     </script>
-    
+
+    <script>
+        document.getElementById('registroForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita el envío del formulario por defecto
+
+            // Obtiene los datos del formulario
+            const formData = new FormData(this);
+
+            // Realiza la solicitud POST para agregar un nuevo paciente
+            fetch('./crudpaciente.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Si se agrega correctamente, muestra una alerta de éxito
+                        alert('¡Paciente agregado exitosamente!');
+                        // Actualiza la tabla de pacientes
+                        getData(paginaActual);
+                        // Cierra el modal de registro
+                        $('#registroModal').modal('hide');
+                    } else {
+                        // Si hay un error, muestra una alerta con el mensaje de error
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    // Si hay un error en la solicitud, muestra una alerta
+                    alert('Error en la solicitud: ' + error);
+                });
+        });
+    </script>
+
 </body>
 
 </html>

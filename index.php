@@ -72,17 +72,17 @@ if (!isset($_SESSION['idusuarios'])) {
                         <i class="material-icons">add</i><span>Nuevo registro</span></a>
                     <ul class="collapse list-unstyled menu" id="homeSubmenu1">
                         <li>
-                            <a href="#" onclick="cargarIframe('./tablas/paciente/paciente.php')">registro Pacientes</a>
+                            <a href="#" onclick="cargarIframe('tablas/paciente/paciente.php')">registro Pacientes</a>
 
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('./tablas/examen/examen.php')">Registro Examenes</a>
+                            <a href="#" onclick="cargarIframe('tablas/examen/examen.php')">Registro Examenes</a>
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('./tablas/muestras/index.php')">Registro muestras</a>
+                            <a href="#" onclick="cargarIframe('tablas/muestras/index.php')">Registro muestras</a>
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('./tablas/usuario/usuario.php')">Registro Usuarios</a>
+                            <a href="#" onclick="cargarIframe('tablas/usuario/usuario.php')">Registro Usuarios</a>
                         </li>
                     </ul>
                 </li>

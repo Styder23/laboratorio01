@@ -14,7 +14,7 @@ try {
         // Realiza una consulta para obtener los datos del paciente con el ID proporcionado
         $query = $conexionBD->prepare("SELECT pa.idpacientes AS id, p.dni AS DNI, p.nombres AS NOMBRE, 
                                        p.apellidos AS APELLIDO, p.edad AS EDAD, p.direccion AS DIRECCIÓN, 
-                                       p.correo AS CORREO, pa.ruc AS RUC, pa.estadopaci AS ESTADO,
+                                       p.correo AS CORREO, pa.ruc AS RUC,
                                        p.fk_idgenero AS GENERO_ID
                                        FROM pacientes pa
                                        JOIN personas p ON pa.fk_idpersona = p.idpersonas

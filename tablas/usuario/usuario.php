@@ -1,22 +1,22 @@
 <?php
+
 // Seguridad de sesiones
 session_start();
+// Incluye la conexión a la base de datos
+include('../examen/conexion.php');
 
-// Importa la clase de conexión
-require_once("../../conexion/conexion.php");
-
-try {
-    $conexionBD = BD::crearInstancia();
-    
-    // Realiza una consulta a la tabla `genero` para obtener las opciones disponibles
-    $query = $conexionBD->query("SELECT idgenero, nom_gen FROM genero");
-    $generos = $query->fetchAll(PDO::FETCH_ASSOC);
-    $query1 = $conexionBD->query("SELECT idcargos, nom_cargo FROM cargos");
-    $cargos = $query1->fetchAll(PDO::FETCH_ASSOC);
-    $query2 = $conexionBD->query("SELECT idestablecimiento, nombre FROM establecimiento");
-    $eess = $query2->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+// Realiza la consulta a la base de datos
+$query = $con->query("SELECT idgenero, nom_gen FROM genero");
+$query1 = $con->query("SELECT idgenero, nom_gen FROM genero");
+// establecimieto
+$query2 = $con->query("SELECT idcargos, nom_cargo FROM cargos");
+$query3 = $con->query("SELECT idcargos, nom_cargo FROM cargos");
+//cargo
+$query4 = $con->query("SELECT idestablecimiento, nombre FROM establecimiento");
+$query5 = $con->query("SELECT idestablecimiento, nombre FROM establecimiento");
+// Verifica que la consulta sea exitosa
+if (!$query) {
+    die('Error en la consulta a la base de datos');
 }
 ?>
 
@@ -28,84 +28,308 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuarios</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.7/datatables.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container my-4">
-        <h2 class="text-center mb-4">Registro de Usuarios</h2>
+    <h1 class="text-center">Exámenes</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <button type="button" style="margin-bottom: 40px;" class="btn btn-primary"
+                            data-bs-toggle="modal" data-bs-target="#registroModal">
+                            Nuevo examen
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
 
-        <!-- Mostrar registros y búsqueda -->
-        <div class="row align-items-center mb-4">
-            <!-- Sección de mostrar registros -->
-            <div class="col-md-6 d-flex align-items-center">
-                <label for="n_registro" class="col-form-label me-2">Mostrar:</label>
-                <select name="n_registro" id="n_registro" class="form-select form-select-sm me-2">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-                <label for="n_registro" class="me-3">Registros</label>
-            </div>
+                        <!-- Tabla de resultados -->
+                        <table id="datatable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>DNI</th>
+                                    <th>Usuario</th>
+                                    <th>GENERO</th>
+                                    <th>EDAD</th>
+                                    <th>TELEFONO</th>
+                                    <th>direccion</th>
+                                    <th>correo</th>
+                                    <th>CARGO</th>
+                                    <th>USER</th>
+                                    <th>Acciones</th>
 
-            <!-- Sección de búsqueda y botón de nuevo registro -->
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" class="form-control me-2 w-50" name="campo" id="campo" placeholder="Buscar...">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
-                    Nuevo Registro
-                </button>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los datos se insertarán aquí -->
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
             </div>
         </div>
-
-        <!-- Tabla de resultados -->
-        <table class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>DNI</th>
-                    <th>Usuario</th>
-                    <th>GENERO</th>
-                    <th>EDAD</th>
-                    <th>TELEFONO</th>                    
-                    <th>direccion</th>
-                    <th>correo</th>
-                    <th>EE.SS</th>
-                    <th>RED</th>
-                    <th>CARGO</th>                                                 
-                    <th>USER</th>
-                    <th>EDITAR</th>
-                    <th>ELIMINAR</th>
-                </tr>
-            </thead>
-            <tbody id="content">
-                <!-- Los datos se insertarán aquí -->
-            </tbody>
-        </table>
-
-        <!-- Controles de paginación -->
-        <nav aria-label="Controles de paginación">
-            <ul class="pagination justify-content-center" id="pagination">
-                <!-- Los controles de paginación se insertarán aquí -->
-            </ul>
-        </nav>
     </div>
 
-    <!-- Modal -->
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.7/datatables.min.js"></script>
+
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Inicializar DataTable
+        var table = $('#datatable').DataTable({
+            serverSide: true,
+            processing: true,
+            ajax: {
+                url: 'Vusuario.php',
+                type: 'POST',
+            },
+            columnDefs: [{
+                targets: [0, 3],
+                orderable: false,
+            }]
+        });
+        // Agregar Usuario
+        $(document).on('submit', '#registroForm', function(event) {
+            event.preventDefault();
+
+            var dni = $('#dni').val();
+            var nombre = $('#nombres').val();
+            var apellido = $('#apellidos').val();
+            var genero = $('#genero').val();
+            var edad = $('#edad').val();
+            var telefono = $('#telefono').val();            
+            var direccion = $('#direccion').val();
+            var correo = $('#correo').val();
+            var eess = $('#eess').val();
+            var cargo = $('#cargo').val();
+            var usuario = $('#usuario').val();
+            var contraseña = $('#contraseña').val();
+
+            if (dni && nombre && apellido && genero && edad && telefono && direccion && correo && eess && cargo && usuario && contraseña) {
+                $.ajax({
+                    url: 'insertusu.php',
+                    method: 'POST',
+                    data: {
+                        dni: dni,
+                        nombre: nombre,
+                        apellido: apellido,
+                        genero: genero,
+                        edad: edad,
+                        telefono: telefono,                        
+                        direccion: direccion,
+                        correo: correo,
+                        eess: eess,
+                        cargo: cargo,
+                        usuario: usuario,
+                        contraseña: contraseña,
+
+                    },
+                    success: function(data) {
+                        try {
+                            var json = JSON.parse(data);
+                            if (json.status === 'success') {
+                                table.draw();
+                                alert('usuario agregado correctamente');
+                                $('#dni').val('');
+                                $('#nombres').val('');
+                                $('#apellidos').val('');
+                                $('#genero').val('');
+                                $('#edad').val('');
+                                $('#telefono').val('');
+                                $('#direccion').val('');
+                                $('#correo').val('');
+                                $('#eess').val('');
+                                $('#cargo').val('');
+                                $('#usuario').val('');
+                                $('#contraseña').val('');
+                                $('#registroModal').modal('hide');
+                            } else {
+                                alert('Error al agregar el Usuario');
+                            }
+                        } catch (e) {
+                            console.error('Error al analizar JSON:', e);
+                            alert('Error al procesar respuesta del servidor');
+                        }
+                    },
+                    error: function() {
+                        alert('Error en la solicitud AJAX');
+                    }
+                });
+            } else {
+                alert('Complete todos los campos');
+            }
+        });
+
+        // Cargar datos para editar Usuario
+        $(document).on('click', '.editbtn', function() {
+            var id = $(this).data('idusuarios');
+            $.ajax({
+                url: 'llenamodif.php',
+                method: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    try {
+                        var json = JSON.parse(data);
+                        if (json) {
+                            console.log(json); // Verifica los datos recibidos en la consola
+                            $('#idusu').val(json.idusuarios);
+                            $('#_dni').val(json.DNI);
+                            $('#_nombres').val(json.NOMBRE);
+                            $('#_apellidos').val(json.APELLIDO);
+                            $('#_genero').val(json.GENERO);
+                            $('#_edad').val(json.EDAD);
+                            $('#_telefono').val(json.TELEFONO);
+                            $('#_direccion').val(json.DIRECCION);                            
+                            $('#_correo').val(json.CORREO);
+                            $('#_eess').val(json.EESS);
+                            $('#_cargo').val(json.CARGO);
+                            $('#_usuario').val(json.USUARIO);
+                            $('#_contraseña').val(json.CONTRA);
+
+
+                            $('#editModal').modal('show'); // Muestra el modal con los datos
+                        } else {
+                            alert('No se encontraron datos para este paciente');
+                        }
+                    } catch (e) {
+                        console.error('Error al analizar JSON:', e);
+                        alert('Error al procesar respuesta del servidor');
+                    }
+                },
+                error: function() {
+                    alert('Error al cargar datos para edición');
+                }
+            });
+        });
+
+        // Editar paciente
+        $(document).on('submit', '#editForm', function(event) {
+            event.preventDefault();
+
+            // Obtén los valores de los campos del formulario
+            var idPaciente = $('#idpacientes').val(); // Corregido el nombre del campo ID
+            console.log(idPaciente);
+            var dn = $('#_dni').val();
+            var nom = $('#_nombres').val();
+            var ape = $('#_apellidos').val();
+            var ed = $('#_edad').val();
+            var direc = $('#_direccion').val();
+            var gen = $('#_genero').val();
+            var cor = $('#_correo').val();
+            var ru = $('#_ruc').val();
+
+
+
+            // Realiza la solicitud AJAX para modificar el paciente
+            $.ajax({
+                url: './modpac.php',
+                method: 'POST',
+                data: {
+                    idPaciente: idPaciente, // Corregido el nombre de la variable
+                    dni: dn,
+                    nombres: nom,
+                    apellidos: ape,
+                    edad: ed,
+                    direccion: direc,
+                    genero: gen,
+                    correo: cor,
+                    ruc: ru
+                },
+                success: function(data) {
+                    try {
+                        var json = JSON.parse(data);
+                        if (json.status === 'true') {
+                            table.draw();
+                            alert('Paciente editado correctamente');
+                            $('#editModal').modal('hide');
+                        } else {
+                            alert('Error al editar el paciente');
+                        }
+                    } catch (e) {
+                        console.error('Error al analizar JSON:', e);
+                        alert('Error al procesar respuesta del servidor');
+                    }
+                },
+                error: function() {
+                    alert('Error en la solicitud AJAX');
+                }
+            });
+        });
+
+        // Función para eliminar un paciente
+        $(document).on('click', '.deleteBtn', function() {
+            // Obtener el ID del paciente a eliminar
+            var idUsuario = $(this).data('idusuarios');
+
+            // Confirmar la eliminación
+            if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
+                // Realizar la solicitud AJAX para eliminar el paciente
+                $.ajax({
+                    url: './deleteusu.php', // Cambia esto por la URL de tu script PHP para eliminar pacientes
+                    method: 'POST',
+                    data: {
+                        //elprimero es la variable de eliminapa.php, el segundo es la variable del inicio
+                        id: idUsuario
+                    },
+                    success: function(data) {
+                        try {
+                            var json = JSON.parse(data);
+                            if (json.status === 'true') {
+                                // Eliminación exitosa, volver a cargar los datos de la tabla
+                                table.ajax.reload(null, false);
+                                alert('Usuario eliminado correctamente');
+                            } else {
+                                alert('Error al eliminar el paciente');
+                            }
+                        } catch (e) {
+                            console.error('Error al analizar JSON:', e);
+                            alert('Error al procesar respuesta del servidor');
+                        }
+                    },
+                    error: function() {
+                        alert('Error en la solicitud AJAX');
+                    }
+                });
+            }
+        });
+
+    });
+    </script>
+
+    <!-- Modal agregar-->
     <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="registroModalLabel">Nuevo Registro</h5>
-                    
+
                 </div>
                 <div class="modal-body">
                     <!-- Formulario dentro del modal -->
-                    <form id="registroForm" action="../usuario/insertusu.php" method="POST">
+                    <form id="registroForm" action="javascript:void(0);" method="POST">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="inputDNI">DNI</label>
-                                <input type="text" class="form-control" id="dni" name="dni" onkeyup="buscar()" required>
+                                <input type="text" class="form-control" id="dni" name="dni" required>
                                 <input type="hidden" name="id" value="<?php $idUsuario ?>">
                             </div>
                             <div class="form-group col-md-6">
@@ -121,9 +345,9 @@ try {
                                 <select class="form-control" id="genero" name="genero" required>
                                     <option value="">Seleccionar Género</option>
                                     <?php
-                                    // Recorre los resultados de la consulta y rellena las opciones del combo de género
-                                    foreach ($generos as $genero) {
-                                        echo '<option value="' . $genero['idgenero'] . '">' . $genero['nom_gen'] . '</option>';
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query->fetch_assoc()) {
+                                        echo '<option value="' . $row['idgenero'] . '">' . $row['nom_gen'] . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -136,7 +360,7 @@ try {
                                 <label for="edad">telefono</label>
                                 <input type="number" class="form-control" id="telefono" name="telefono" required>
                             </div>
-                           
+
                             <div class="form-group col-md-6">
                                 <label for="direccion">direccion</label>
                                 <input type="text" class="form-control" id="direccion" name="direccion" required>
@@ -147,16 +371,17 @@ try {
                             </div>
                         </div>
                         <!-- Reorganización de los combos -->
-                        <div class="row">                      
-                            
-                        <div class="form-group col-md-6">
+                        <div class="row">
+
+                            <div class="form-group col-md-6">
                                 <label for="genero">EE.SS</label>
                                 <select class="form-control" id="eess" name="eess" required>
                                     <option value="">Seleccionar eess</option>
+
                                     <?php
-                                    // Recorre los resultados de la consulta y rellena las opciones del combo de género
-                                    foreach ($eess as $ess) {
-                                        echo '<option value="' . $ess['idestablecimiento'] . '">' . $ess['nombre'] . '</option>';
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query4->fetch_assoc()) {
+                                        echo '<option value="' . $row['idestablecimiento'] . '">' . $row['nombre'] . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -170,9 +395,9 @@ try {
                                 <select class="form-control" id="cargo" name="cargo" required>
                                     <option value="">Seleccionar Cargo</option>
                                     <?php
-                                    // Recorre los resultados de la consulta y rellena las opciones del combo de género
-                                    foreach ($cargos as $cargo) {
-                                        echo '<option value="' . $cargo['idcargos'] . '">' . $cargo['nom_cargo'] . '</option>';
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query2->fetch_assoc()) {
+                                        echo '<option value="' . $row['idcargos'] . '">' . $row['nom_cargo'] . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -199,128 +424,114 @@ try {
         </div>
     </div>
 
-    <!-- Bootstrap JS and jQuery -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="./capusu.js"></script>
-    <!-- Script para manejar la búsqueda -->
-    <script>
-    // Inicializa la búsqueda y escucha los eventos
-    let paginaActual = 1;
-    const n_registro = document.getElementById("n_registro");
-    const campo = document.getElementById("campo");
-    const content = document.getElementById("content");
-    const pagination = document.getElementById("pagination");
+    <!-- Modal Editar-->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registroModalLabel">Guardar Cambios</h5>
 
-    // Función para obtener datos de la tabla
-    function getData(pagina) {
-        const formData = new FormData();
-        formData.append("campo", campo.value);
-        formData.append("n_registro", n_registro.value);
-        formData.append("pagina", pagina);
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario dentro del modal -->
+                    <form id="editForm" action="javascript:void(0);" method="POST">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDNI">DNI</label>
+                                <input type="text" class="form-control" id="_dni" name="_dni" required>
+                                <input type="hidden" name="id" value="<?php $idUsuario ?>">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputNombres">Nombres:</label>
+                                <input type="text" class="form-control" id="_nombres" name="_nombres" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputNombres">Apellidos:</label>
+                                <input type="text" class="form-control" id="_apellidos" name="_apellidos" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="genero">Género</label>
+                                <select class="form-control" id="_genero" name="_genero" required>
+                                    <option value="">Seleccionar Género</option>
+                                    <?php
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query1->fetch_assoc()) {
+                                        echo '<option value="' . $row['idgenero'] . '">' . $row['nom_gen'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="edad">Edad</label>
+                                <input type="number" class="form-control" id="_edad" name="_edad" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="edad">telefono</label>
+                                <input type="number" class="form-control" id="_telefono" name="_telefono" required>
+                            </div>
 
-        // Realiza la solicitud POST
-        fetch("./Vusuario.php", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Crea la tabla a partir de los datos recibidos
-                let html = '';
-                if (data.resultados.length > 0 && data.resultados[0].mensaje) {
-                    // Si hay un mensaje especial
-                    html = '<tr><td colspan="10">' + data.resultados[0].mensaje + '</td></tr>';
-                } else {
-                    // Si hay datos, genera filas de tabla
-                    data.resultados.forEach(row => {
-                        // Inicia una nueva fila para cada resultado
-                        html += '<tr>';
-                        html += '<td>' + row.idusuarios + '</td>';
-                        html += '<td>' + row.dni + '</td>';
-                        html += '<td>' + row.PERSONA + '</td>';
-                        html += '<td>' + row.GENERO + '</td>';
-                        html += '<td>' + row.EDAD + '</td>';
-                        html += '<td>' + row.TELEFONO + '</td>';
-                        html += '<td>' + row.DIRECCION + '</td>';
-                        html += '<td>' + row.CORREO + '</td>';
-                        html += '<td>' + row.EESS + '</td>';
-                        html += '<td>' + row.RED + '</td>';
-                        html += '<td>' + row.CARGO + '</td>';
-                        html += '<td>' + row.USUARIO + '</td>';
-                        
-                        // Genera una celda con un enlace para editar, incluyendo el ID del paciente
-                        html += '<td class="text-center">';
-                        html +=
-                            '<a href="#" data-bs-toggle="modal" data-bs-target="#registroModal" data-id="' +
-                            row.idusuarios +
-                            '" class="btn-modifica">';
-                        html += '<img src="../../imagenes/boligrafo.png" alt="Editar"></a>';
-                        html += '</td>';
+                            <div class="form-group col-md-6">
+                                <label for="direccion">direccion</label>
+                                <input type="text" class="form-control" id="_direccion" name="_direccion" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="correo">Correo (OPCIONAL)</label>
+                                <input type="email" class="form-control" id="_correo" name="_correo" required>
+                            </div>
+                        </div>
+                        <!-- Reorganización de los combos -->
+                        <div class="row">
 
-                        // Genera una celda con un enlace para eliminar
-                        html += '<td class="text-center">';
-                        html += '<a href="#" class="btn-elimina" data-id="' + row.idusuarios + '">';
-                        html += '<img src="../../imagenes/borrar.png" alt="Eliminar"></a>';
-                        html += '</td>';
+                            <div class="form-group col-md-6">
+                                <label for="genero">EE.SS</label>
+                                <select class="form-control" id="_eess" name="_eess" required>
+                                    <option value="">Seleccionar eess</option>
+                                    <?php
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query5->fetch_assoc()) {
+                                        echo '<option value="' . $row['idestablecimiento'] . '">' . $row['nombre'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="estado">RED</label>
+                                <input type="text" class="form-control" id="_red" name="_red" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="genero">Cargos</label>
+                                <select class="form-control" id="_cargo" name="_cargo" required>
+                                    <option value="">Seleccionar Cargo</option>
+                                    <?php
+                                    // Recorre los resultados de la consulta
+                                    while ($row = $query3->fetch_assoc()) {
+                                        echo '<option value="' . $row['idcargos'] . '">' . $row['nom_cargo'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="direccion">usuario</label>
+                                <input type="text" class="form-control" id="_usuario" name="_usuario" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="direccion">contraseña</label>
+                                <input type="text" class="form-control" id="_contraseña" name="_contraseña" required>
+                            </div>
+                        </div><br>
 
-                        // Cierra la fila
-                        html += '</tr>';
-                    });
-                }
-                // Asigna el HTML generado al contenido
-                content.innerHTML = html;
+                        <div class="form-row">
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary" name="registro">Registrar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                // Actualiza los controles de paginación
-                updatePagination(data.total_paginas, data.pagina_actual);
-            })
-            .catch(err => {
-                console.error(err);
-                content.innerHTML = 'Hubo un error al obtener los datos.';
-            });
-    }
-
-    // Función para actualizar los controles de paginación
-    function updatePagination(totalPaginas, paginaActual) {
-        let paginationHTML = '';
-
-        // Crear los controles de paginación
-        for (let i = 1; i <= totalPaginas; i++) {
-            paginationHTML += `<li class="page-item ${i === paginaActual ? 'active' : ''}">
-                    <a class="page-link" href="javascript:void(0);" onclick="changePage(${i})">${i}</a>
-                </li>`;
-        }
-
-        // Asignar los controles de paginación al elemento
-        pagination.innerHTML = paginationHTML;
-    }
-
-    // Función para cambiar de página
-    function changePage(page) {
-        paginaActual = page;
-        getData(paginaActual);
-    }
-
-    // Inicializa la función de obtener datos
-    getData(paginaActual);
-
-    // Escucha eventos en los campos de entrada
-    campo.addEventListener("input", () => getData(paginaActual));
-    n_registro.addEventListener("change", () => getData(paginaActual));
-
-    // Agregar evento de clic para editar paciente
-    /*document.addEventListener('click', function(event) {
-        const target = event.target;
-        // Verifica si el elemento que se hizo clic es el icono de editar
-        if (target.tagName === 'IMG' && target.parentElement.getAttribute('data-bs-target') ===
-            '#registroModal') {
-            // Captura el ID del paciente desde el atributo data-id
-            const idPaciente = target.parentElement.getAttribute('data-id');
-            // Realiza la acción de cargar datos del paciente en el modal
-            
-        }
-    });*/
-    </script>
-    
 </body>
 
 </html>

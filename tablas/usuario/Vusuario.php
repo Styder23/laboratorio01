@@ -1,60 +1,79 @@
 <?php
-require '../../conexion/config.php';
-// Especifica las columnas que quieres seleccionar de la base de datos
-$columnas = ["idusuarios", "dni", "PERSONA", "GENERO", "EDAD", "TELEFONO", "DIRECCION", "CORREO", "EESS", "RED", "CARGO", "USUARIO"];
+include('../examen/conexion.php');
 
-// Especifica la tabla que quieres consultar
-$tabla = "v_usuario";
+// Define las columnas disponibles
+$columns = [
+    'idusuarios', 
+    'DNI', 
+    'PERSONA', 
+    'GENERO', 
+    'EDAD',
+    'TELEFONO', 
+    'DIRECCION', 
+    'CORREO',
+    'CARGO',
+    'USUARIO',
+];
 
-// Obtiene el valor del campo 'campo' enviado por el cliente (si existe)
-$campo = isset($_POST["campo"]) ? $conectar->real_escape_string($_POST["campo"]) : null;
-$limit = isset($_POST["n_registro"]) ? intval($_POST["n_registro"]) : 10;
-$pagina = isset($_POST["pagina"]) ? intval($_POST["pagina"]) : 1;
+// Consulta base
+$sql = "SELECT * FROM v_usuario";
 
-// Inicializa la cláusula WHERE si se proporciona un campo de búsqueda
-$where = "";
-if ($campo !== null) {
-    $where = "WHERE ";
-    foreach ($columnas as $columna) {
-        $where .= "$columna LIKE '%$campo%' OR ";
-    }
-    // Elimina el último "OR" de la cláusula WHERE
-    $where = substr($where, 0, -4);
+// Manejo de búsqueda
+if (isset($_POST['search']['value'])) {
+    $search_value = mysqli_real_escape_string($con, $_POST['search']['value']);
+    $sql .= " WHERE DNI LIKE '%" . $search_value . "%' OR PERSONA LIKE '%" . $search_value . "%' OR CARGO LIKE '%" . $search_value . "%' OR USUARIO LIKE '%" . $search_value . "%'";
 }
 
-// Calcular el punto de partida para la paginación
-$inicio = ($pagina - 1) * $limit;
-
-// Obtener el total de registros para calcular las páginas
-$total_sql = "SELECT COUNT(*) AS total FROM $tabla $where";
-$total_result = $conectar->query($total_sql);
-$total_row = $total_result->fetch_assoc();
-$total_registros = $total_row["total"];
-
-// Calcular el número total de páginas
-$total_paginas = ceil($total_registros / $limit);
-
-// Consulta SQL con paginación
-$sql = "SELECT " . implode(", ", $columnas) . " FROM $tabla $where LIMIT $inicio, $limit";
-$resultado = $conectar->query($sql);
-
-// Almacena los resultados en un array
-$resultados = [];
-if ($resultado->num_rows > 0) {
-    while ($row = $resultado->fetch_assoc()) {
-        $resultados[] = $row;
-    }
+// Manejo de orden
+if (isset($_POST['order'])) {
+    $column_index = intval($_POST['order'][0]['column']);
+    $column_order = mysqli_real_escape_string($con, $_POST['order'][0]['dir']);
+    $sql .= " ORDER BY " . $columns[$column_index] . " " . $column_order;
 } else {
-    // Si no hay resultados, devuelve un mensaje especial
-    $resultados[] = ['mensaje' => 'Sin resultados'];
+    $sql .= " ORDER BY idusuarios DESC";
 }
 
-// Envía los resultados como JSON, incluyendo la información de paginación
-header('Content-Type: application/json');
-echo json_encode([
-    'resultados' => $resultados,
-    'total_paginas' => $total_paginas,
-    'pagina_actual' => $pagina,
-    'total_registros' => $total_registros,
-], JSON_UNESCAPED_UNICODE);
+// Manejo de paginación
+if (isset($_POST['length']) && $_POST['length'] != -1) {
+    $start = intval($_POST['start']);
+    $length = intval($_POST['length']);
+    $sql .= " LIMIT " . $start . ", " . $length;
+}
+
+// Ejecuta la consulta
+$result = mysqli_query($con, $sql);
+if (!$result) {
+    echo json_encode(['error' => 'Error en la consulta: ' . mysqli_error($con)]);
+    exit;
+}
+
+// Construye el array de datos
+$data = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $data[] = [
+        $row['idusuarios'],
+        $row['DNI'],
+        $row['PERSONA'],
+        $row['GENERO'],
+        $row['EDAD'],
+        $row['TELEFONO'],
+        $row['DIRECCION'],
+        $row['CORREO'],
+        $row['CARGO'],
+        $row['USUARIO'],
+        '<button class="btn btn-info btn-sm editbtn" data-idusuarios="' . $row['idusuarios'] . '">Editar</button> ' .
+        '<button class="btn btn-danger btn-sm deleteBtn" data-idusuarios="' . $row['idusuarios'] . '">Eliminar</button>'
+    ];
+}
+
+// Prepara la respuesta
+$output = [
+    'draw' => intval($_POST['draw']),
+    'recordsTotal' => mysqli_num_rows(mysqli_query($con, "SELECT * FROM v_usuario")),
+    'recordsFiltered' => mysqli_num_rows($result),
+    'data' => $data
+];
+
+// Imprime la salida JSON para depuración
+echo json_encode($output);
 ?>

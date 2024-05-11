@@ -1,6 +1,6 @@
-<?php 
-include_once "../../conexion/conexion.php";
-$conexionBD = BD::crearInstancia();
+<?php
+// Incluye la conexión a la base de datos
+include('../examen/conexion.php');
 
 // Obtiene los datos del formulario
 $dni = isset($_POST['dni']) ? $_POST['dni'] : '';
@@ -16,33 +16,30 @@ $cargo = isset($_POST['cargo']) ? $_POST['cargo'] : '';
 $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
 $contraseña = isset($_POST['contraseña']) ? $_POST['contraseña'] : '';
 
-try {
-    // Prepara la consulta para llamar al procedimiento almacenado
-    $query = $conexionBD->prepare("CALL pro_Cusu(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    if ($query === false) {
-        // Mostrar el error de la preparación de la consulta
-        throw new Exception('Error al preparar la consulta: ' . $conexionBD->errorInfo()[2]);
-    }
+// Realizamos la consulta para insertar
+$sql = $con->prepare("CALL pro_Cusu(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$sql->bind_param('sssiisssiiss', $dni, $nombre, $apellidos, $genero, $edad, $telefono, $direccion, $correo, $eess, $cargo, $usuario, $contraseña);
 
-    // Vincula los parámetros a la consulta
-    if (!$query->execute([$dni, $nombre, $apellidos, $genero, $edad, $telefono, $direccion, $correo, $eess, $cargo, $usuario, $contraseña])) {
-        // Manejador de errores de ejecución
-        throw new Exception('Error al ejecutar la consulta: ' . $query->errorInfo()[2]);
-    }
+$result = $sql->execute();
 
-    // Inserción exitosa, redirige
-    echo '<script>window.location.href = "../usuario/usuario.php";</script>';
-} catch (Exception $e) {
-    // Manejo de excepciones
-    echo "Error: " . $e->getMessage();
-} finally {
-    // Cerrar la consulta y la conexión a la base de datos
-    if (isset($query)) {
-        $query->close();
-    }
-    if (isset($conexionBD)) {
-        $conexionBD = null;
-    }
+if ($result) {
+    // Si la inserción fue exitosa
+    $data = array(
+        'status' => 'success',
+        'message' => 'Paciente agregado correctamente'
+    );
+} else {
+    // Si ocurrió un error
+    $data = array(
+        'status' => 'error',
+        'message' => 'Error al agregar el paciente'
+    );
 }
-?>
 
+// Devuelve la respuesta como JSON
+echo json_encode($data);
+
+// Cierra la conexión y la consulta
+$sql->close();
+$con->close();
+?>

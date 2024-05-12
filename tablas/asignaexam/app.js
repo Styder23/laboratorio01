@@ -137,7 +137,8 @@ function cantidad(row) {
         const filaId = document.getElementById(`row${row}`);
         if (filaId) {
             const celdas = filaId.getElementsByTagName('td');
-            celdas[1].innerHTML = cantidad;
+            celdas[3].innerHTML = cantidad;
+            celdas[5].innerHTML = cantidad;
             celdas[2].innerHTML = item.total;
         }
 

@@ -79,7 +79,7 @@ if (!isset($_SESSION['idusuarios'])) {
                             <a href="#" onclick="cargarIframe('tablas/examen/examen.php')">Registro Examenes</a>
                         </li>
                         <li>
-                            <a href="#" onclick="cargarIframe('tablas/muestras/index.php')">Registro muestras</a>
+                            <a href="#" onclick="cargarIframe('tablas/asignaexam/asigna.php')">Asignar Examenes</a>
                         </li>
                         <li>
                             <a href="#" onclick="cargarIframe('tablas/usuario/usuario.php')">Registro Usuarios</a>
@@ -215,7 +215,7 @@ if (!isset($_SESSION['idusuarios'])) {
         iframe.src = url;
 
         // Cambia la URL de la página principal para reflejar la ruta del archivo PHP cargado
-        history.pushState(null, '', url);
+        //history.pushState(null, '', url);
 
     }
     </script>

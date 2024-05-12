@@ -82,7 +82,7 @@ if (!$query) {
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: 'obtenr.php',
+                    url: './obtenr.php',
                     type: 'POST',
                 },
                 columnDefs: [

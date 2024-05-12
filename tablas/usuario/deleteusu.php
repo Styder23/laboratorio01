@@ -8,9 +8,9 @@ try {
     $conexionBD = BD::crearInstancia();
 
     // Verifica si se recibió una solicitud POST con el ID del paciente
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idusuario'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         // Obtener el ID del paciente de la solicitud POST
-        $idusuario = intval($_POST['idusuario']);
+        $idusuario = intval($_POST['id']);
 
         // Preparar la llamada al procedimiento almacenado
         $stmt = $conexionBD->prepare("CALL pro_DeleteUsuario(:idusuario)");

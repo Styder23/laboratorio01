@@ -1,5 +1,5 @@
 <?php
-include('../tablas/examen/conexion.php');
+include('../examen/conexion.php');
 
 
 

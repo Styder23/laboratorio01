@@ -3,7 +3,7 @@
 // Seguridad de sesiones
 session_start();
 // Incluye la conexión a la base de datos
-include('../tablas/examen/conexion.php');
+include('../examen/conexion.php');
 
 // Realiza la consulta a la base de datos
 $query = $con->query("SELECT idgenero, nom_gen FROM genero");

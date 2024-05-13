@@ -29,11 +29,15 @@ if (!$query) {
 
     <title>Exámenes</title>
     <style>
-        .green {
-            background-color: green;
-            color: #fff   ;
-        }
-    
+    .green {
+        background-color: green;
+        color: #fff;
+    }
+
+    .reed {
+        background-color: red;
+        color: #fff;
+    }
     </style>
 </head>
 
@@ -82,142 +86,173 @@ if (!$query) {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.7/datatables.min.js"></script>
-        <script type="text/javascript">
-        $(document).ready(function () {
-            // Inicializar DataTable
-            var table = $('#datatable').DataTable({
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: 'obtenertabla.php',
-                    type: 'POST',
-                },
-                columnDefs: [
-                    {
-                        targets: [0, 3],
-                        orderable: false,
-                    }
-                ]
-            });
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Inicializar DataTable
+        var table = $('#datatable').DataTable({
+            serverSide: true,
+            processing: true,
+            ajax: {
+                url: 'obtenertabla.php',
+                type: 'POST',
+            },
+            columnDefs: [{
+                targets: [0, 3],
+                orderable: false,
+            }]
+        });
 
-            // Agregar examen
-            $(document).on('submit', '#frmexam', function (event) {
-                event.preventDefault();
+        // Agregar examen
+        $(document).on('submit', '#frmexam', function(event) {
+            event.preventDefault();
 
-                var examen = $('#examen').val();
-                var area = $('#area').val();
+            var examen = $('#examen').val();
+            var area = $('#area').val();
 
-                if (examen && area) {
-                    $.ajax({
-                        url: 'addexam.php',
-                        method: 'POST',
-                        data: {
-                            examen: examen,
-                            area: area
-                        },
-                        success: function (data) {
-                            try {
-                                var json = JSON.parse(data);
-                                if (json.status === 'success') {
-                                    table.draw();
-                                    alert('Examen agregado correctamente');
-                                    $('#examen').val('');
-                                    $('#area').val('');
-                                    $('#agregarexamen').modal('hide');
-                                } else {
-                                    alert('Error al agregar el examen');
-                                }
-                            } catch (e) {
-                                console.error('Error al analizar JSON:', e);
-                                alert('Error al procesar respuesta del servidor');
-                            }
-                        },
-                        error: function () {
-                            alert('Error en la solicitud AJAX');
-                        }
-                    });
-                } else {
-                    alert('Complete todos los campos');
-                }
-            });
-
-            // Cargar datos para editar examen
-            $(document).on('click', '.editbtn', function () {
-                var id = $(this).data('idexamen');
+            if (examen && area) {
                 $.ajax({
-                    url: 'carga.php',
+                    url: 'addexam.php',
                     method: 'POST',
                     data: {
-                        id: id
-                    },
-                    success: function (data) {
-                        try {
-                            var json = JSON.parse(data);
-                            if (json) {
-                                $('#idexamen').val(json.idexamen);
-                                $('#_examen').val(json.nomexam);
-                                $('#_area').val(json.fk_idarea);
-                                $('#editexmmodal').modal('show');
-                            } else {
-                                alert('No se encontraron datos para este examen');
-                            }
-                        } catch (e) {
-                            console.error('Error al analizar JSON:', e);
-                            alert('Error al procesar respuesta del servidor');
-                        }
-                    },
-                    error: function () {
-                        alert('Error al cargar datos para edición');
-                    }
-                });
-            });
-
-            // Editar examen
-            $(document).on('submit', '#editExamenForm', function (event) {
-                event.preventDefault();
-
-                // Verificar que todas las variables estén definidas
-                var idexamen = $('#idexamen').val();
-                var examen = $('#_examen').val();
-                var area = $('#_area').val();
-
-                if (!idexamen || !examen || !area) {
-                    alert('Complete todos los campos');
-                    return;
-                }
-
-                $.ajax({
-                    url: 'updaexam.php',
-                    method: 'POST',
-                    data: {
-                        idexamen: idexamen,
                         examen: examen,
                         area: area
                     },
-                    success: function (data) {
+                    success: function(data) {
                         try {
                             var json = JSON.parse(data);
                             if (json.status === 'success') {
                                 table.draw();
-                                alert('Examen editado correctamente');
-                                $('#editexmmodal').modal('hide');
+                                alert('Examen agregado correctamente');
+                                $('#examen').val('');
+                                $('#area').val('');
+                                $('#agregarexamen').modal('hide');
                             } else {
-                                alert('Error al editar el examen');
+                                alert('Error al agregar el examen');
                             }
                         } catch (e) {
                             console.error('Error al analizar JSON:', e);
                             alert('Error al procesar respuesta del servidor');
                         }
                     },
-                    error: function () {
+                    error: function() {
                         alert('Error en la solicitud AJAX');
                     }
                 });
+            } else {
+                alert('Complete todos los campos');
+            }
+        });
+
+        // Cargar datos para editar examen
+        $(document).on('click', '.editbtn', function() {
+            var id = $(this).data('idexamen');
+            $.ajax({
+                url: 'carga.php',
+                method: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    try {
+                        var json = JSON.parse(data);
+                        if (json) {
+                            $('#idexamen').val(json.idexamen);
+                            $('#_examen').val(json.nomexam);
+                            $('#_area').val(json.fk_idarea);
+                            $('#editexmmodal').modal('show');
+                        } else {
+                            alert('No se encontraron datos para este examen');
+                        }
+                    } catch (e) {
+                        console.error('Error al analizar JSON:', e);
+                        alert('Error al procesar respuesta del servidor');
+                    }
+                },
+                error: function() {
+                    alert('Error al cargar datos para edición');
+                }
             });
         });
+
+        // Editar examen
+        $(document).on('submit', '#editExamenForm', function(event) {
+            event.preventDefault();
+
+            // Verificar que todas las variables estén definidas
+            var idexamen = $('#idexamen').val();
+            var examen = $('#_examen').val();
+            var area = $('#_area').val();
+
+            if (!idexamen || !examen || !area) {
+                alert('Complete todos los campos');
+                return;
+            }
+
+            $.ajax({
+                url: 'updaexam.php',
+                method: 'POST',
+                data: {
+                    idexamen: idexamen,
+                    examen: examen,
+                    area: area
+                },
+                success: function(data) {
+                    try {
+                        var json = JSON.parse(data);
+                        if (json.status === 'success') {
+                            table.draw();
+                            alert('Examen editado correctamente');
+                            $('#editexmmodal').modal('hide');
+                        } else {
+                            alert('Error al editar el examen');
+                        }
+                    } catch (e) {
+                        console.error('Error al analizar JSON:', e);
+                        alert('Error al procesar respuesta del servidor');
+                    }
+                },
+                error: function() {
+                    alert('Error en la solicitud AJAX');
+                }
+            });
+        });
+
+        //ANALIZAR EXAMEN
+        $(document).on('click', '.analizaBtn', function() {
+            var idExamen = $(this).data('idexamen'); // Obtener el ID del examen
+            var tipoExamen = obtenerTipoExamen(
+                idExamen); // Obtener el tipo de examen (por ejemplo, "hemograma" o cualquier otro)
+
+            // Verificar el tipo de examen y redirigir al usuario según corresponda
+            if (tipoExamen === 'Hemograma') {
+                window.location.href =
+                    './ejemplo.html'; // Reemplaza 'resultado_hemograma.php' con la URL de la página de resultados de hemograma
+            } else {
+                window.location.href =
+                    './ejemplo.html'; // Reemplaza 'otra_pagina.php' con la URL de la página de destino para otros tipos de exámenes
+            }
+        });
+
+        function obtenerTipoExamen(idExamen) {
+            // Mapeo de IDs de examen a tipos de examen
+            var tiposExamen = {
+                'ID_EXAMEN_1': 'Hemograma',
+                'ID_EXAMEN_2': 'otro_tipo_de_examen',
+                // Agrega más mapeos según sea necesario
+            };
+
+            // Verificar si el ID de examen existe en el mapeo
+            if (tiposExamen.hasOwnProperty(idExamen)) {
+                return tiposExamen[idExamen];
+            } else {
+                // Si el ID de examen no existe en el mapeo, devuelve un valor por defecto
+                return 'otro_tipo_de_examen'; // Cambia esto según tus necesidades
+            }
+        }
+    });
     </script>
 
     <!-- Modal agregar examen -->

@@ -1,6 +1,6 @@
 <?php
 // Incluye la conexión a la base de datos
-include('../tablas/examen/conexion.php');
+include('../examen/conexion.php');
 // Verifica si se recibieron los datos requeridos en la solicitud POST
 if (isset($_POST['_id'], $_POST['_dni'], $_POST['_nombres'], $_POST['_apellidos'], $_POST['_edad'], $_POST['_direccion'], $_POST['_genero'], $_POST['_correo'], $_POST['_ruc'])) {
     echo json_encode(['status' => 'false', 'message' => 'Faltan datos en la solicitud']);

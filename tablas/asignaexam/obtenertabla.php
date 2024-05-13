@@ -49,7 +49,8 @@ $data = [];
 while ($row = mysqli_fetch_assoc($result)) {
     // Agregar estilo condicional para la columna ESTADO
     $estado_class = $row['ESTADO'] == 'Pendiente' ? 'class="green"' : '';
-    
+    // Usar operador ternario separado para evitar sobrescribir la variable
+    $estado_class .= $row['ESTADO'] == 'Completado' ? ' class="reed"' : '';
     // Construir la fila de datos con el estilo condicional aplicado
     $data[] = [
         $row['ID'],

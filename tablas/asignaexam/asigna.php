@@ -44,7 +44,7 @@
                 <label for="dni" class="col-sm-2 col-form-label">DNI</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="dni" id="dni" onkeyup="buscar()">
-                    <input type="text" id="idpaciente" name="idpaciente" disabled>
+                    <input type="hidden" id="idpaciente" name="idpaciente" disabled>
                     <button type="button" class="btn btn-primary mt-2" id="Nuevo">Add</button>
                 </div>
             </div>
@@ -104,6 +104,8 @@
             <table class="table table-striped" id="lista">
                 <thead>
                     <tr>
+                    
+                        
                         <th>ID</th>
                         <th>DNI</th>
                         <th>Paciente</th>
@@ -125,52 +127,15 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="./app.js"></script>
-        <script>
-        $(document).ready(function() {
-            $('#agregar').on('click', function() {
-                const id = $('#idpaciente').val();
-                const dni = $('#dni').val();
-                const paciente = $('#paciente').val();
-                const examen = $('#examen').val();
-                const fecha = $('#fecha').val();
-                const muestra = $('#muestra').val();
-
-                const nuevaFila = `
-                    <tr>
-                        <td>${id}</td>
-                        <td>${dni}</td>
-                        <td>${paciente}</td>
-                        <td>${examen}</td>
-                        <td>${fecha}</td>
-                        <td>${muestra}</td>
-                        <td>
-                            <button class="btn btn-danger btn-eliminar">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-
-                $('#lista tbody').append(nuevaFila);
-
-                limpiarCampos();
-            });
-
-            $(document).on('click', '.btn-eliminar', function() {
-                $(this).closest('tr').remove();
-                limpiarCampos();
-            });
-
-            function limpiarCampos() {
-                if ($('#lista tbody tr').length === 0) {
-                    $('#dni').val('');
-                    $('#paciente').val('');
-                    $('#examen').val('');
-                    $('#fecha').val('');
-                    $('#muestra').val('');
-                }
-            }
+        
+    <!--EL BOTTON ADDD-->
+    <script>
+    $(document).ready(function(){
+        $('#Nuevo').click(function(){
+            window.location.href = '../../paciente/paciente.php'; // Reemplaza 'index.html' con la URL de tu página de destino
         });
+    });
     </script>
-
     <!-- Script para obtener los exámenes de las áreas -->
     <script>
     // Scrip para obtener los exámenes de las áreas

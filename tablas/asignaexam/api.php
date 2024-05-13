@@ -1,46 +1,33 @@
 <?php
-// Incluir el archivo de conexión a la base de datos
-include('../muestras/connection.php');
 
-// Verificar si se recibieron datos por POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Decodificar los datos JSON recibidos del cliente
-    $examData = json_decode(file_get_contents('php://input'), true);
+// Recibir el JSON
+$examenes = json_decode($_POST['json'], true);
+//print_r($examenes);
 
-    // Verificar si se recibieron datos válidos
-    if (!empty($examData) && is_array($examData)) {
-        // Preparar la consulta para insertar los exámenes
-        $stmt = $con->prepare("CALL Pro_asignaexam(?, ?, ?)");
+require '../examen/conexion.php';
 
-        // Verificar si la preparación de la consulta fue exitosa
-        if ($stmt) {
-            // Iterar sobre los datos de los exámenes y ejecutar la consulta
-            foreach ($examData as $exam) {
-                // Obtener los valores del examen
-                $id_paciente = $exam['idPaciente']; // Ajustado al nombre correcto del campo
-                $muestra = $exam['idMuestra']; // Ajustado al nombre correcto del campo
-                $examen = $exam['idExamen']; // Ajustado al nombre correcto del campo
+// Verificar si se recibieron datos válidos
+if (!empty($examenes) && is_array($examenes)) {
+    // Preparar la consulta para insertar los exámenes
+    $stmt = $con->prepare("CALL Pro_asignaexam(?, ?, ?)");
 
-                // Asignar valores y ejecutar la consulta
-                $stmt->bind_param("iii", $id_paciente, $muestra, $examen);
-                $stmt->execute();
-            }
+    // Verificar si la preparación de la consulta fue exitosa
+    if ($stmt) {
+        // Iterar sobre los datos de los exámenes y ejecutar la consulta
+        foreach ($examenes as $exam) {
+            // Obtener los valores del examen
+            $id_paciente = $exam['id']; // Ajustado al nombre correcto del campo
+            $muestra = $exam['muestra']; // Ajustado al nombre correcto del campo
+            $examen = $exam['examen']; // Ajustado al nombre correcto del campo
 
-            // Cerrar la consulta
-            $stmt->close();
-
-            // Respondemos al cliente con un mensaje de éxito
-            echo json_encode(['success' => true]);
-        } else {
-            // Si no se pudo preparar la consulta, responder con un mensaje de error
-            echo json_encode(['error' => 'Error al preparar la consulta']);
+            // Asignar valores y ejecutar la consulta
+            $stmt->bind_param("iii", $id_paciente, $muestra, $examen);
+            $stmt->execute();
         }
-    } else {
-        // Si no se recibieron datos válidos, responder con un mensaje de error
-        echo json_encode(['error' => 'Datos incorrectos']);
+
+        // Cerrar la consulta
+        $stmt->close();
     }
-} else {
-    // Si no se recibieron datos por POST, responder con un mensaje de error
-    echo json_encode(['error' => 'No se recibieron datos por POST']);
 }
+
 ?>

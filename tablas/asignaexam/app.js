@@ -1,73 +1,72 @@
-// Esperar a que el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar elementos del DOM
-    const btnAgregar = document.getElementById('agregar');
-    const btnGuardar = document.getElementById('guardar');
-    const lista = document.getElementById('lista');
-    const dniInput = document.getElementById('dni');
-    const pacienteInput = document.getElementById('paciente');
-    const idPacienteInput = document.getElementById('idpaciente');
-    const fechaInput = document.getElementById('fecha');
-    const areaSelect = document.getElementById('area');
-    const examenSelect = document.getElementById('examen');
-    const muestraSelect = document.getElementById('muestra');
+const boton=document.getElementById('agregar');
+const guardar=document.getElementById('guardar');
+const lista = document.getElementById('lista');
+const data=[];
+const cant=0;
+boton.addEventListener("click",agregar);
+guardar.addEventListener("click",save);
 
-    // Agregar eventos
-    btnAgregar.addEventListener('click', agregar);
-    btnGuardar.addEventListener('click', guardar);
-
-    // Función para agregar una fila a la tabla
-    function agregar() {
-        // Código para agregar una fila a la tabla
+function agregar(){
+    const id=document.getElementById('idpaciente').value;
+    const dni=document.getElementById('dni').value; 
+    const paciente=document.getElementById('paciente').value;    
+    const examen=document.getElementById('examen').value; 
+    const fecha=document.getElementById('fecha').value; 
+    const muestra=document.getElementById('muestra').value; 
+    //agregar el elemento al arreglo
+    data.push({
+        "No":cant,
+        "id":id,
+        "dni":dni,
+        "paciente":paciente,
+        "examen":examen,
+        "fecha":fecha,
+        "muestra":muestra
     }
+    );
+    var id_row='row'+cant;
+    var fila = '<tr id="' + id_row + '"><td>' + id + '</td><td>' + dni + '</td><td>' + paciente + '</td><td>' + examen + '</td><td>' + fecha + '</td><td>' + muestra + '</td><td><a href="#" class="btn btn-danger" onclick="eliminar(' + cant + ');">Eliminar</a></td></tr>';
+    //agregar a la tabla
+    $("#lista").append(fila);
+    cant++;
+    suma();   
+}
 
-// Función para guardar los datos en el servidor
-function guardar() {
-    // Crear un array para almacenar los datos de las filas
-    const datos = [];
 
-    // Obtener todas las filas de la tabla
-    const filas = lista.querySelectorAll('tr');
-
-    // Iterar sobre cada fila
-    filas.forEach(fila => {
-        // Obtener las celdas de la fila
-        const celdas = fila.querySelectorAll('td');
-
-        // Verificar si hay suficientes celdas en la fila
-        if (celdas.length >= 7) { // Ajusta este número según la cantidad de celdas que esperas
-            // Obtener los valores de cada celda
-            const idPaciente = celdas[0].innerText; // Suponiendo que el ID del paciente está en la primera celda
-            const idExamen = celdas[3].innerText;   // Suponiendo que el ID del examen está en la cuarta celda
-            const idMuestra = celdas[5].innerText;  // Suponiendo que el ID de la muestra está en la sexta celda
-
-            // Agregar los datos al array
-            datos.push({
-                idPaciente: idPaciente,
-                idExamen: idExamen,
-                idMuestra: idMuestra
-            });
-        } else {
-            console.error('La fila no tiene suficientes celdas');
-        }
-    });
-
-    // Realizar una solicitud AJAX para enviar los datos a guarda.php
+function save(){
+    const json=JSON.stringify(data);
+    console.log(data);
     $.ajax({
-        url: 'api.php', // Ajusta la URL según tu estructura de archivos
-        method: 'POST',
-        data: { datos: datos }, // Enviar el array de datos como JSON
-        dataType: 'json',
-        success: function(response) {
-            // Manejar la respuesta del servidor
-            console.log(response);
-            // Aquí puedes mostrar un mensaje de éxito o redirigir a otra página
-        },
-        error: function(xhr, status, error) {
-            // Manejar errores de la solicitud AJAX
-            console.error(xhr.responseText);
+        type: "POST",
+        url: "api.php",
+        data: "json="+json,
+        success:function(resp){
+            console.log(resp);
+            window.location.href = './exam.php';
         }
     });
 }
 
-});
+function suma(){
+    var tot=0;
+    for(x of data){
+        tot= tot+x.cant;
+    }
+    document.getElementById('total').innerHTML="Total "+tot;
+}
+
+function eliminar(row) {
+    // Remover la fila
+    $("#row" + row).remove();
+    let pos = -1;
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].No === row) {
+            pos = i;
+            break;
+        }
+    }
+    if (pos !== -1) {
+        data.splice(pos, 1);
+        suma();
+    }
+}

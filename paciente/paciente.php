@@ -3,7 +3,7 @@
 // Seguridad de sesiones
 session_start();
 // Incluye la conexión a la base de datos
-include('../examen/conexion.php');
+include('../tablas/examen/conexion.php');
 
 // Realiza la consulta a la base de datos
 $query = $con->query("SELECT idgenero, nom_gen FROM genero");
@@ -167,7 +167,7 @@ if (!$query) {
                         var json = JSON.parse(data);
                         if (json) {
                             console.log(json); // Verifica los datos recibidos en la consola
-                            $('#idexamen').val(json.idpacientes);
+                            $('#idexamen').val(json.id);                 
                             $('#_dni').val(json.DNI);
                             $('#_nombres').val(json.NOMBRE);
                             $('#_apellidos').val(json.APELLIDO);
@@ -176,6 +176,7 @@ if (!$query) {
                             $('#_genero').val(json.GENERO);
                             $('#_correo').val(json.CORREO);
                             $('#_ruc').val(json.ruc);
+                            $('#_id').val(json.id);
                             $('#editModal').modal('show'); // Muestra el modal con los datos
                         } else {
                             alert('No se encontraron datos para este paciente');
@@ -194,10 +195,8 @@ if (!$query) {
         // Editar paciente
         $(document).on('submit', '#editForm', function(event) {
             event.preventDefault();
-
             // Obtén los valores de los campos del formulario
-            var idPaciente = $('#idpacientes').val(); // Corregido el nombre del campo ID
-            console.log(idPaciente);
+            var idPaciente = $('#_id').val();
             var dn = $('#_dni').val();
             var nom = $('#_nombres').val();
             var ape = $('#_apellidos').val();
@@ -206,15 +205,12 @@ if (!$query) {
             var gen = $('#_genero').val();
             var cor = $('#_correo').val();
             var ru = $('#_ruc').val();
-
-            
-
             // Realiza la solicitud AJAX para modificar el paciente
             $.ajax({
                 url: './modpac.php',
                 method: 'POST',
                 data: {
-                    idPaciente: idPaciente, // Corregido el nombre de la variable
+                    idPaciente: idPaciente,
                     dni: dn,
                     nombres: nom,
                     apellidos: ape,
@@ -226,7 +222,9 @@ if (!$query) {
                 },
                 success: function(data) {
                     try {
+                        console.log(data);
                         var json = JSON.parse(data);
+                        console.log(json);
                         if (json.status === 'true') {
                             table.draw();
                             alert('Paciente editado correctamente');
@@ -373,7 +371,7 @@ if (!$query) {
                                 <label for="inputDNI">DNI</label>
                                 <input type="text" class="form-control" id="_dni" name="_dni" onkeyup="buscar()"
                                     required>
-                                <input type="hidden" id="_id" name="_id">
+                                <input type="hidden" id="_id" name="_id" value="<?php echo $id; ?>">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputNombres">Nombres:</label>

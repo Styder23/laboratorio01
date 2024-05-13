@@ -1,6 +1,6 @@
 <?php
 // Incluye la conexión a la base de datos
-include('../examen/conexion.php');
+include('../tablas/examen/conexion.php');
 
 // Obtiene los datos del formulario
 $dni = isset($_POST['dni']) ? $_POST['dni'] : '';

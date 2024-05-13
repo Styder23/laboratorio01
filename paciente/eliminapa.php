@@ -1,6 +1,6 @@
 <?php
 // Importa la clase de conexión
-require_once("../../conexion/conexion.php");
+require_once("../conexion/conexion.php");
 
 try {
     // Crea una instancia de la base de datos

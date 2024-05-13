@@ -60,7 +60,8 @@ while ($row = mysqli_fetch_assoc($result)) {
         $row['FECHA'],
         '<span ' . $estado_class . '>' . $row['ESTADO'] . '</span>',
         '<button class="btn btn-info btn-sm editbtn" data-idexamen="' . $row['ID'] . '">Editar</button> ' .
-        '<button class="btn btn-danger btn-sm deleteBtn" data-idexamen="' . $row['ID'] . '">Eliminar</button>'
+        '<button class="btn btn-danger btn-sm deleteBtn" data-idexamen="' . $row['ID'] . '">Eliminar</button>'.
+        '<button class="btn btn-warning btn-sm analizaBtn" data-idexamen="' . $row['ID'] . '">Analizar</button>'
     ];
 }
 

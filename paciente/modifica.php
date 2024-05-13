@@ -1,6 +1,6 @@
 <?php
 // Incluye la conexión a la base de datos
-include('../examen/conexion.php');
+include('../tablas/examen/conexion.php');
 
 // Verifica si se recibió un ID
 if (!isset($_POST['id']) || empty($_POST['id'])) {

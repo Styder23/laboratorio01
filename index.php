@@ -92,7 +92,7 @@ if (!isset($_SESSION['idusuarios'])) {
                         <i class="material-icons">analytics</i><span>Reportes BI</span></a>
                     <ul class="collapse list-unstyled menu" id="pageSubmenu2">
                         <li>
-                            <a href="#" onclick="cargarIframe('./tablas/asignaexam/asigna.php')">Page 1</a>
+                            <a href="#" onclick="cargarIframe('tablas/asignaexam/exam.php')">Page 1</a>
                         </li>
                         <li>
                             <a href="#">Page 2</a>

@@ -28,7 +28,7 @@ function agregar(){
     var fila = '<tr id="' + id_row + '"><td>' + id + '</td><td>' + dni + '</td><td>' + paciente + '</td><td>' + examen + '</td><td>' + fecha + '</td><td>' + muestra + '</td><td><a href="#" class="btn btn-danger" onclick="eliminar(' + cant + ');">Eliminar</a></td></tr>';
     //agregar a la tabla
     $("#lista").append(fila);
-    cant++;
+
     suma();   
 }
 
@@ -42,9 +42,16 @@ function save(){
         data: "json="+json,
         success:function(resp){
             console.log(resp);
-            window.location.href = './exam.php';
+            //window.location.href = './exam.php';
         }
     });
+
+    $('#idpaciente').val(' ');
+    $('#dni').val(' ');
+    $('#paciente').val(' ');
+    $('#examen').val(' ');
+    $('#fecha').val(' ');
+    $('#muestra').val(' ');
 }
 
 function suma(){

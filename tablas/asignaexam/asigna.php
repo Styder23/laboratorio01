@@ -1,4 +1,6 @@
 <?php
+// Seguridad de sesiones
+    session_start();
   include('../muestras/connection.php');
   $query = $con->query("SELECT idtipoexamen,nomexamen  FROM tipoexamen");
   $query1 = $con->query("SELECT idarea,nomarea  FROM area");

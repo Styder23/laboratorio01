@@ -2,7 +2,7 @@
 <?php
 $servername = "localhost"; // Ajusta según sea necesario
 $username = "root"; // Ajusta según sea necesario
-$password = "root"; // Ajusta según sea necesario
+$password = ""; // Ajusta según sea necesario
 $database = "bdlab"; // Ajusta según sea necesario
 
 // Crea la conexión

@@ -1,10 +1,14 @@
 <?php
 
+
+
+require '../examen/conexion.php';
+
+
 // Recibir el JSON
 $examenes = json_decode($_POST['json'], true);
 //print_r($examenes);
-
-require '../examen/conexion.php';
+print_r($_GET);
 
 // Verificar si se recibieron datos válidos
 if (!empty($examenes) && is_array($examenes)) {

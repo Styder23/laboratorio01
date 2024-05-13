@@ -108,7 +108,6 @@ if (!$query) {
         // Agregar Usuario
         $(document).on('submit', '#registroForm', function(event) {
             event.preventDefault();
-
             var dni = $('#dni').val();
             var nombre = $('#nombres').val();
             var apellido = $('#apellidos').val();
@@ -121,7 +120,6 @@ if (!$query) {
             var cargo = $('#cargo').val();
             var usuario = $('#usuario').val();
             var contraseña = $('#contraseña').val();
-
             if (dni && nombre && apellido && genero && edad && telefono && direccion && correo && eess && cargo && usuario && contraseña) {
                 $.ajax({
                     url: 'insertusu.php',
@@ -191,7 +189,7 @@ if (!$query) {
                         var json = JSON.parse(data);
                         if (json) {
                             console.log(json); // Verifica los datos recibidos en la consola
-                            $('#idusu').val(json.idusuarios);
+                            $('#_id').val(json.idusuarios);
                             $('#_dni').val(json.DNI);
                             $('#_nombres').val(json.NOMBRE);
                             $('#_apellidos').val(json.APELLIDO);
@@ -226,8 +224,8 @@ if (!$query) {
             event.preventDefault();
 
             // Obtén los valores de los campos del formulario
-            var idPaciente = $('#idpacientes').val(); // Corregido el nombre del campo ID
-            console.log(idPaciente);
+            var idPaciente = $('#_id').val(); // Corregido el nombre del campo ID
+            
             var dn = $('#_dni').val();
             var nom = $('#_nombres').val();
             var ape = $('#_apellidos').val();
@@ -236,12 +234,16 @@ if (!$query) {
             var gen = $('#_genero').val();
             var cor = $('#_correo').val();
             var ru = $('#_ruc').val();
-
-
+            var tel = $('#_telefono').val();
+            var ees = $('#_eess').val();
+            var car = $('#_cargo').val();
+            var usu = $('#_usuario').val();
+            var con = $('#_contraseña').val();
+            console.log(con);
 
             // Realiza la solicitud AJAX para modificar el paciente
             $.ajax({
-                url: './modpac.php',
+                url: './updateusu.php',
                 method: 'POST',
                 data: {
                     idPaciente: idPaciente, // Corregido el nombre de la variable
@@ -252,7 +254,12 @@ if (!$query) {
                     direccion: direc,
                     genero: gen,
                     correo: cor,
-                    ruc: ru
+                    ruc: ru,
+                    telefono:tel,
+                    eess:ees,
+                    cargo:car,
+                    usuario:usu,
+                    contraseña:con
                 },
                 success: function(data) {
                     try {
@@ -279,7 +286,7 @@ if (!$query) {
         $(document).on('click', '.deleteBtn', function() {
             // Obtener el ID del paciente a eliminar
             var idUsuario = $(this).data('idusuarios');
-
+            console.log(idUsuario);
             // Confirmar la eliminación
             if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
                 // Realizar la solicitud AJAX para eliminar el paciente
@@ -439,7 +446,7 @@ if (!$query) {
                             <div class="form-group col-md-6">
                                 <label for="inputDNI">DNI</label>
                                 <input type="text" class="form-control" id="_dni" name="_dni" required>
-                                <input type="hidden" name="id" value="<?php $idUsuario ?>">
+                                <input type="hidden" name="_id" id="_id" value="<?php $idUsuario ?>">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputNombres">Nombres:</label>

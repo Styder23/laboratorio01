@@ -124,7 +124,7 @@ if (!$query) {
                     success: function(data) {
                         try {
                             var json = JSON.parse(data);
-                            if (json.status === 'success') {
+                            if (json.status == 'success') {
                                 table.draw();
                                 alert('Paciente agregado correctamente');
                                 $('#dni').val('');

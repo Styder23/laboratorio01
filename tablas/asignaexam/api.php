@@ -1,5 +1,10 @@
 <?php
 
+
+
+require '../examen/conexion.php';
+
+
 // Recibir el JSON
 $examenes = json_decode($_POST['json'], true);
 print_r($examenes);

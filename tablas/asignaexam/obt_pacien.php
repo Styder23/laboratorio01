@@ -1,7 +1,7 @@
 
 <?php
 include '../../conexion/conec.php';
-$obj = new ConexionDB("localhost", "root", "root", "bdlab");
+$obj = new ConexionDB("localhost", "root", "", "bdlab");
 $db = $obj->conectar();
 if (isset($_POST['buscar'])) {
   $dni = $_POST['dni'];

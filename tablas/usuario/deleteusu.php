@@ -25,7 +25,8 @@ try {
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Devolver la respuesta en formato JSON
-        echo json_encode($resultado);
+        echo json_encode(['status' => 'true', 'message' => 'Paciente eliminado correctamente']);
+
 
         // Cerrar el cursor
         $stmt->closeCursor();

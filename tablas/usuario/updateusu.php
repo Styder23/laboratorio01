@@ -1,25 +1,13 @@
 <?php
 
-// Importa la clase de conexión
-require_once("../../conexion/conexion.php");
-
-try {
-    // Crea una instancia de la base de datos
-    $conexionBD = BD::crearInstancia();
-
-    // Verifica si se recibió una solicitud POST y un parámetro GET con el ID del usuario
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['idusuario'])) {
-        // Obtener el ID del usuario de la URL
-        $idUsuario = intval($_GET['idusuario']);
-
-        // Verifica que se han enviado los campos del formulario necesarios
-        if (
-            isset($_POST['dni']) && isset($_POST['nombres']) && isset($_POST['apellidos']) &&
-            isset($_POST['genero']) && isset($_POST['edad']) && isset($_POST['telefono']) &&
-            isset($_POST['direccion']) && isset($_POST['correo']) && isset($_POST['eess']) &&
-            isset($_POST['cargo']) && isset($_POST['usuario']) && isset($_POST['contraseña'])
-        ) {
+include('../examen/conexion.php');
+// Verifica si se recibieron los datos requeridos en la solicitud POST
+if (isset($_POST['_id'], $_POST['_dni'], $_POST['_nombres'], $_POST['_apellidos'], $_POST['_edad'], $_POST['_direccion'], $_POST['_genero'], $_POST['_correo'], $_POST['_ruc'], $_POST['_telefono'], $_POST['_eess'], $_POST['_cargo'], $_POST['_usuario'], $_POST['_contraseña'])) {
+    echo json_encode(['status' => 'false', 'message' => 'Faltan datos en la solicitud']);
+    exit;
+}
             // Extraer los datos del formulario
+            $id = intval($_POST['idPaciente']);
             $dni = $_POST['dni'];
             $nombres = $_POST['nombres'];
             $apellidos = $_POST['apellidos'];
@@ -31,53 +19,34 @@ try {
             $eess = intval($_POST['eess']);
             $cargo = intval($_POST['cargo']);
             $usuario = $_POST['usuario'];
-            $contraseña = $_POST['contraseña']; // Debe ser de tipo cadena
+            $contraseña = $_POST['contraseña'];
+// Manejo de excepciones para la consulta
+try {
+    // Prepara la declaración
+    $sql = "CALL pro_UpUsuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $con->prepare($sql);
 
-            // Prepara y ejecuta la llamada al procedimiento almacenado
-            $stmt = $conexionBD->prepare("CALL pro_UpUsuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            // Vincula los parámetros correctamente
-            $stmt->bindParam(1, $idUsuario, PDO::PARAM_INT);
-            $stmt->bindParam(2, $dni, PDO::PARAM_STR);
-            $stmt->bindParam(3, $nombres, PDO::PARAM_STR);
-            $stmt->bindParam(4, $apellidos, PDO::PARAM_STR);
-            $stmt->bindParam(5, $genero, PDO::PARAM_INT);
-            $stmt->bindParam(6, $edad, PDO::PARAM_INT);
-            $stmt->bindParam(7, $telefono, PDO::PARAM_STR);
-            $stmt->bindParam(8, $direccion, PDO::PARAM_STR);
-            $stmt->bindParam(9, $correo, PDO::PARAM_STR);
-            $stmt->bindParam(10, $eess, PDO::PARAM_INT);
-            $stmt->bindParam(11, $cargo, PDO::PARAM_INT);
-            $stmt->bindParam(12, $usuario, PDO::PARAM_STR);
-            $stmt->bindParam(13, $contraseña, PDO::PARAM_STR);
-
-            // Ejecutar el procedimiento almacenado
-            $stmt->execute();
-
-            // Recoge el mensaje del procedimiento almacenado
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Cierra el cursor
-            $stmt->closeCursor();
-
-            // Devuelve la respuesta en formato JSON
-            // Asegúrate de que el objeto JSON contiene siempre una clave 'mensaje'
-            if (isset($resultado['mensaje'])) {
-                echo json_encode(['mensaje' => $resultado['mensaje']]);
-            } else {
-                echo json_encode(['error' => 'No se recibió un mensaje de éxito del procedimiento almacenado']);
-            }
-        } else {
-            // Si falta algún campo del formulario, devuelve un mensaje de error
-            echo json_encode(['error' => 'Faltan datos en la solicitud POST.']);
-        }
-    } else {
-        // Si no se recibió una solicitud POST o no se recibió el ID del usuario, devuelve un mensaje de error
-        echo json_encode(['error' => 'Método de solicitud no válido o ID del usuario no proporcionado.']);
+    if (!$stmt) {
+        throw new Exception('Error preparando la consulta SQL');
     }
+    // Vincula los parámetros
+    $stmt->bind_param('isssiisssiiss', $id, $dni, $nombres, $apellidos, $genero, $edad, $telefono, $direccion, $correo,$eess,$cargo,$usuario,$contraseña);
+    // Ejecuta la consulta
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'true', 'message' => 'Paciente actualizado correctamente']);
+    } else {
+        throw new Exception('Error al actualizar el paciente');
+    }
+
+    // Cierra la declaración
+    $stmt->close();
 } catch (Exception $e) {
-    // Manejar excepciones y devolver el error en formato JSON
-    echo json_encode(['error' => 'Hubo un error al procesar la solicitud: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'false', 'message' => $e->getMessage()]);
 }
+
+// Cierra la conexión a la base de datos
+$con->close();           
+
+
 
 ?>

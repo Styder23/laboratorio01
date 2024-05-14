@@ -4,7 +4,7 @@ include '../../conexion/conec.php';
 
 try {
     // Crear una instancia de conexión utilizando la clase ConexionDB
-    $obj = new ConexionDB("localhost", "root", "root", "bdlab");
+    $obj = new ConexionDB("localhost", "root", "", "bdlab");
     $db = $obj->conectar();
 
     // Consulta SQL para obtener los datos de la tabla de muestras

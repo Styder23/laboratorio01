@@ -134,7 +134,7 @@
     <script>
     $(document).ready(function(){
         $('#Nuevo').click(function(){
-            window.location.href = '../../paciente/paciente.php'; // Reemplaza 'index.html' con la URL de tu página de destino
+            window.location.href = '../paciente/paciente.php'; // Reemplaza 'index.html' con la URL de tu página de destino
         });
     });
     </script>

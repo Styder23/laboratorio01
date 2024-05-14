@@ -1,4 +1,3 @@
-
 <?php
 $servername = "localhost"; // Ajusta según sea necesario
 $username = "root"; // Ajusta según sea necesario

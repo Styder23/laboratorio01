@@ -11,10 +11,10 @@ $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : '';
 $genero = isset($_POST['genero']) ? $_POST['genero'] : '';
 $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
 $ruc = isset($_POST['ruc']) ? $_POST['ruc'] : '';
-print_r($_POST);
+
 //realizamos la consulta para insertar
 $sql = $con->prepare("CALL pro_Cpaciente(?, ?, ?, ?, ?, ?, ?, ?)");
-$sql->bind_param('sssiisss', $dni, $nombre, $apellidos, $edad, $direccion, $genero, $correo, $ruc);
+$sql->bind_param('ssisissi', $dni, $nombre, $apellidos, $edad, $direccion, $genero, $correo, $ruc);
 
 $result = $sql->execute();
 

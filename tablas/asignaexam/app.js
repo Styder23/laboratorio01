@@ -34,24 +34,25 @@ function agregar(){
 
 
 function save(){
-    const json=JSON.stringify(data);
+    const json = JSON.stringify(data);
     console.log(data);
     $.ajax({
         type: "POST",
         url: "api.php",
-        data: "json="+json,
-        success:function(resp){
+        data: {json: json}, // Modificado para enviar el JSON correctamente
+        success: function(resp){
             console.log(resp);
-            //window.location.href = './exam.php';
+            // Limpiar los campos después de que la llamada AJAX sea exitosa
+            $('#idpaciente').val('');
+            $('#dni').val('');
+            $('#paciente').val('');
+            $('#examen').val('');
+            $('#fecha').val('');
+            $('#muestra').val('');
+            // Redirigir a otra página después de limpiar los campos
+            window.location.href = './exam.php';
         }
     });
-
-    $('#idpaciente').val(' ');
-    $('#dni').val(' ');
-    $('#paciente').val(' ');
-    $('#examen').val(' ');
-    $('#fecha').val(' ');
-    $('#muestra').val(' ');
 }
 
 function suma(){

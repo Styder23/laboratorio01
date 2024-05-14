@@ -278,7 +278,7 @@ if (!$query) {
         // Función para eliminar un paciente
         $(document).on('click', '.deleteBtn', function() {
             // Obtener el ID del paciente a eliminar
-            var idUsuario = $(this).data('idusuarios');
+            var id = $(this).data('idusuarios');
 
             // Confirmar la eliminación
             if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
@@ -288,7 +288,7 @@ if (!$query) {
                     method: 'POST',
                     data: {
                         //elprimero es la variable de eliminapa.php, el segundo es la variable del inicio
-                        id: idUsuario
+                        id: id
                     },
                     success: function(data) {
                         try {

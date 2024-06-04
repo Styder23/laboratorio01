@@ -432,11 +432,18 @@
             </tbody>
         </table>
         <div calss="mt-5 mb-4">
-            <button class="btn btn-primary">Guardar Datos</button>
+            <button class="btn btn-primary" id="Guardar">Guardar Datos</button>
         </div>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        //EL BOTON SEGUIR ASIGNANDO Y REDIRIGIR
+        document.getElementById("Guardar").addEventListener("click", function() {
+            window.location.href =
+            "../../vistas/vis_result.php"; // Reemplaza "otro.php" con la URL de la página a la que deseas redirigir
+        });
+    </script>
 </body>
 </html>

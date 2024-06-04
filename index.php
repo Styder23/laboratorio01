@@ -84,6 +84,9 @@ if (!isset($_SESSION['idusuarios'])) {
                         <li>
                             <a href="#" onclick="cargarIframe('tablas/usuario/usuario.php')">Registro Usuarios</a>
                         </li>
+                        <li>
+                            <a href="#" onclick="cargarIframe('tablas/usuario/usuario.php')">Registro Usuarios</a>
+                        </li>
                     </ul>
                 </li>
 
@@ -92,10 +95,10 @@ if (!isset($_SESSION['idusuarios'])) {
                         <i class="material-icons">analytics</i><span>Reportes BI</span></a>
                     <ul class="collapse list-unstyled menu" id="pageSubmenu2">
                         <li>
-                            <a href="#" onclick="cargarIframe('tablas/asignaexam/exam.php')">Page 1</a>
+                            <a href="#" onclick="cargarIframe('reporte/fecha.php')">Pacientes Atendidos</a>
                         </li>
                         <li>
-                            <a href="#">Page 2</a>
+                            <a href="#" onclick="cargarIframe('tablas/asignaexam/exam.php')">Page 2</a>
                         </li>
                         <li>
                             <a href="#">Page 3</a>

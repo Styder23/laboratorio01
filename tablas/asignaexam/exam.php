@@ -234,7 +234,7 @@ if (!$query) {
                         // Verificar el tipo de examen y redirigir al usuario según corresponda
                         if (tipoExamen ===
                             1) { // Cambiado a comparación con valores numéricos
-                            window.location.href = './ejemplo.html?id=' + id;
+                            window.location.href = './ejemplo.php?id=' + id;
                         } else if (tipoExamen ===
                             2) { // Cambiado a comparación con valores numéricos
                             window.location.href = './resultado_orina.php?id=' + id;
